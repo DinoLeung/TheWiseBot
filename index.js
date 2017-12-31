@@ -13,7 +13,7 @@ const bot = new Telegraf(BOT_TOKEN)
 
 bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
 // bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT)
-App.use(bot.webhookCallback(`/bot${BOT_TOKEN}`))
+app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`))
 
 bot.start((ctx) => {
     var msg = 'Grettings! I am the Wise, I can help with all your decisions. 👴🏻'
@@ -185,10 +185,10 @@ bot.on('successful_payment', (ctx) =>{
 bot.startPolling()
 
 //start express server
-expressApp.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get('/', (req, res) => {
+    res.redirect('https://t.me/TheWiseBot');
   });
   
-expressApp.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
