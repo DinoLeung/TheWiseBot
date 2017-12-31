@@ -1,7 +1,13 @@
 const Telegraf = require('telegraf')
 const Markup = require('telegraf/markup')
 
+const PORT = process.env.PORT
+const URL = process.env.URL
+
 const bot = new Telegraf(process.env.BOT_TOKEN)
+
+bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
+bot.startWebhook(`/bot${API_TOKEN}`, null, PORT)
 
 bot.start((ctx) => {
     var msg = 'Grettings! I am the Wise, I can help with all your decisions. 👴🏻'
