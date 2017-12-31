@@ -1,13 +1,16 @@
 const Telegraf = require('telegraf')
 const Markup = require('telegraf/markup')
 
+const BOT_TOKEN = process.env.BOT_TOKEN
+const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
+const MYID = process.env.MYID
 const PORT = process.env.PORT
 const URL = process.env.URL
 
-const bot = new Telegraf(process.env.BOT_TOKEN)
+const bot = new Telegraf(BOT_TOKEN)
 
-bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
-bot.startWebhook(`/bot${API_TOKEN}`, null, PORT)
+bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
+bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT)
 
 bot.start((ctx) => {
     var msg = 'Grettings! I am the Wise, I can help with all your decisions. 👴🏻'
@@ -138,7 +141,7 @@ bot.command('suggest', (ctx) =>{
     var i = ctx.message.text.trim().indexOf(' ')
     if (i > 0){
         var msg = ctx.message.text.substr(i + 1)
-        ctx.telegram.sendMessage(process.env.MYID, '@' + ctx.from.username + ' suggested to ' + msg)
+        ctx.telegram.sendMessage(MYID, '@' + ctx.from.username + ' suggested to ' + msg)
         return ctx.reply('Thanks, I will look into this method soon. 💪')
     } else {
         return ctx.reply('Huh? My hearing isn\'t too well. Try again with \/suggest and follow by your suggestions')
@@ -147,7 +150,7 @@ bot.command('suggest', (ctx) =>{
 
 //Donation section
 const invoice = {
-    provider_token: process.env.PROVIDER_TOKEN,
+    provider_token: PROVIDER_TOKEN,
     start_parameter: 'buy-wise-a-drink',
     title: 'The Nerd Drink',
     description: 'Like everything in the universe , wisdom requires energy input to function. Please, if you\'re a seeker of wisdom, ensure that this wisdom can continue to be spread. To ensure this is done, it requires significant amount of redbulls to happen.',
@@ -171,7 +174,7 @@ bot.command('nerddrink', (ctx) =>{
 })
 bot.on('pre_checkout_query', (ctx) => ctx.answerPreCheckoutQuery(true))
 bot.on('successful_payment', (ctx) =>{
-    ctx.telegram.sendMessage(process.env.MYID, '@' + ctx.from.username + ' bought you a nerd drink! 🍻')
+    ctx.telegram.sendMessage(MYID, '@' + ctx.from.username + ' bought you a nerd drink! 🍻')
     return ctx.reply('Thank you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!')
 })
 
