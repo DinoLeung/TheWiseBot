@@ -1,4 +1,6 @@
 const Telegraf = require('telegraf')
+const Markup = require('telegraf/markup')
+
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.start((ctx) => {
@@ -105,15 +107,52 @@ bot.command('draw', (ctx) =>{
     
 })
 
+//Pick one from list
+
 bot.command('pick', (ctx) =>{
-    
+    var i = ctx.message.text.trim().indexOf(' ')
+    if (i > 0){
+        var options = (ctx.message.text.substr(i + 1)).split(',').map(item => item.trim()).filter(item => item !== '')
+        if (options.length > 0){
+            return ctx.reply(options[Math.floor(Math.random() * options.length)] + ' has to be the one.')
+        } else {
+            return ctx.reply('Huh? My hearing isn\'t too well. Try again with following pattern: \/pick option1, option2, option3, ...')
+        }
+    } else {
+        return ctx.reply('Huh? My hearing isn\'t too well. Try again with following pattern: \/pick option1, option2, option3, ...')
+    }
 })
 
+//New suggestion from users
 bot.command('suggest', (ctx) =>{
 })
 
+//Donation section
+const invoice = {
+    provider_token: process.env.PROVIDER_TOKEN,
+    start_parameter: 'buy-wise-a-drink',
+    title: 'The Nerd Drink',
+    description: 'Like everything in the universe , wisdom requires energy input to function. Please, if you\'re a seeker of wisdom, ensure that this wisdom can continue to be spread. To ensure this is done, it requires significant amount of redbulls to happen.',
+    photo_url: 'https://holland.pk/uptow/i4/8c94c66b3a7600b76c17ad90eb6516d1.png',
+    photo_width: 228,
+    photo_height: 436,
+    currency: 'aud',
+    prices: [
+        { label: 'Nerd Drink', amount: 1000 }
+    ],
+    payload: {
+        coupon: 'BURP'
+    }
+}
+const buyOptions = Markup.inlineKeyboard([
+    Markup.payButton('💸 Buy')
+  ]).extra()
+
 bot.command('nerddrink', (ctx) =>{
+    return ctx.replyWithInvoice(invoice, buyOptions)
 })
+bot.on('pre_checkout_query', (ctx) => ctx.answerPreCheckoutQuery(true))
+bot.on('successful_payment', (ctx) => ctx.reply('Thank you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!'))
 
 //start poll uptdates
 bot.startPolling()
