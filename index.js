@@ -4,11 +4,11 @@ const Markup = require('telegraf/markup')
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.start((ctx) => {
-    var msg = 'Grettings! I am the wise, I can help with all your decisions. 👴🏻'
+    var msg = 'Grettings! I am the Wise, I can help with all your decisions. 👴🏻'
     msg += "\n\n"
-    msg += 'You can simply \/flip a coin, \/roll a die, or even \/roll3 dice at a time.'
+    msg += 'You can simply \/flip a 🌝, \/roll a 🎲, or even \/roll3 🎲 at a time.'
     msg += "\n\n"
-    msg += 'You can also \/draw a card from a stack. If you wish you can enable \/singlestack mode to \/draw cards from the same stack until you \/shuffle the stack.'
+    msg += 'You can also \/draw a 🃏 from a stack. If you wish you can enable \/singlestack mode to \/draw 🃏 from the same stack until you \/shuffle the stack.'
     msg += "\n\n"
     msg += '\/suggest your favourite decision making method if I can\'t provide you yet.'
     msg += "\n\n"
@@ -17,21 +17,21 @@ bot.start((ctx) => {
 })
 
 bot.command('help', (ctx) =>{
-    var msg = 'Grettings! I am the wise, I can help you make decisions. 👴🏻'
+    var msg = 'Grettings! I am the Wise, I can help you make decisions. 👴🏻'
     msg += "\n\n"
     msg += '*Coins*'
     msg += "\n"
-    msg += '\/flip - flip a coin'
+    msg += '\/flip - flip a 🌝'
     msg += "\n\n"
     msg += '*Dices*'
     msg += "\n"
-    msg += '\/roll - roll a die'
+    msg += '\/roll - roll a 🎲'
     msg += "\n"
-    msg += '\/roll3 - roll three dice'
+    msg += '\/roll3 - roll 🎲🎲🎲'
     msg += "\n\n"
     msg += '*Cards*'
     msg += "\n"
-    msg += '\/draw - draw a card from a stack'
+    msg += '\/draw - draw a 🃏 from a stack'
     msg += "\n"
     msg += '\/singlestack - toggle single stack mode'
     msg += "\n"
@@ -118,7 +118,7 @@ bot.command('pick', (ctx) =>{
     if (i > 0){
         var options = (ctx.message.text.substr(i + 1)).split(',').map(item => item.trim()).filter(item => item !== '')
         if (options.length > 0){
-            return ctx.reply(options[Math.floor(Math.random() * options.length)] + ' has to be the one.')
+            return ctx.reply(options[Math.floor(Math.random() * options.length)] + ' has to be the one. 😉')
         } else {
             return ctx.reply('Huh? My hearing isn\'t too well. Try again with following pattern: \/pick option1, option2, option3, ...')
         }
@@ -133,7 +133,7 @@ bot.command('suggest', (ctx) =>{
     if (i > 0){
         var msg = ctx.message.text.substr(i + 1)
         ctx.telegram.sendMessage(process.env.MYID, '@' + ctx.from.username + ' suggested to ' + msg)
-        return ctx.reply('Thanks, I will look into this method soon.')
+        return ctx.reply('Thanks, I will look into this method soon. 💪')
     } else {
         return ctx.reply('Huh? My hearing isn\'t too well. Try again with \/suggest and follow by your suggestions')
     }
@@ -164,7 +164,10 @@ bot.command('nerddrink', (ctx) =>{
     return ctx.replyWithInvoice(invoice, buyOptions)
 })
 bot.on('pre_checkout_query', (ctx) => ctx.answerPreCheckoutQuery(true))
-bot.on('successful_payment', (ctx) => ctx.reply('Thank you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!'))
+bot.on('successful_payment', (ctx) =>{
+    ctx.telegram.sendMessage(process.env.MYID, '@' + ctx.from.username + ' bought you a nerd drink! 🍻')
+    return ctx.reply('Thank you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!')
+})
 
 //start poll uptdates
 bot.startPolling()
