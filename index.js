@@ -4,16 +4,20 @@ const Markup = require('telegraf/markup')
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.start((ctx) => {
-    var msg = 'Grettings! I am the wise, I can help with all your decisions.'
+    var msg = 'Grettings! I am the wise, I can help with all your decisions. 👴🏻'
     msg += "\n\n"
     msg += 'You can simply \/flip a coin, \/roll a die, or even \/roll3 dice at a time.'
     msg += "\n\n"
-    msg += 'You can also \/draw a card from a stack. If you wish you can enable \/singlestack mode to \/draw cards from the same stack until you \/shuffle the stack'
+    msg += 'You can also \/draw a card from a stack. If you wish you can enable \/singlestack mode to \/draw cards from the same stack until you \/shuffle the stack.'
+    msg += "\n\n"
+    msg += '\/suggest your favourite decision making method if I can\'t provide you yet.'
+    msg += "\n\n"
+    msg += 'Ask \/help for more.'
     return ctx.reply(msg)
 })
 
 bot.command('help', (ctx) =>{
-    var msg = 'Grettings! I am the wise, I can help you make decisions.'
+    var msg = 'Grettings! I am the wise, I can help you make decisions. 👴🏻'
     msg += "\n\n"
     msg += '*Coins*'
     msg += "\n"
@@ -125,6 +129,14 @@ bot.command('pick', (ctx) =>{
 
 //New suggestion from users
 bot.command('suggest', (ctx) =>{
+    var i = ctx.message.text.trim().indexOf(' ')
+    if (i > 0){
+        var msg = ctx.message.text.substr(i + 1)
+        ctx.telegram.sendMessage(process.env.MYID, '@' + ctx.from.username + ' suggested to ' + msg)
+        return ctx.reply('Thanks, I will look into this method soon.')
+    } else {
+        return ctx.reply('Huh? My hearing isn\'t too well. Try again with \/suggest and follow by your suggestions')
+    }
 })
 
 //Donation section
