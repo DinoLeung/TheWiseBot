@@ -5,11 +5,13 @@ const Markup = require('telegraf/markup')
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
 const MYID = process.env.MYID
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000
 const URL = process.env.URL
 
 // const app = express();
 const bot = new Telegraf(BOT_TOKEN)
+// Http webhook, for nginx/heroku users.
+bot.startWebhook('/bot${BOT_TOKEN}', null, PORT)
 
 // app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`))
 // bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
