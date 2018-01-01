@@ -1,21 +1,14 @@
 const Telegraf = require('telegraf')
 const Markup = require('telegraf/markup')
-// const express = require('express')
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
 const MYID = process.env.MYID
 const PORT = process.env.PORT || 5000
-const URL = process.env.URL
 
-// const app = express();
 const bot = new Telegraf(BOT_TOKEN)
-// Http webhook, for nginx/heroku users.
+//So I can specfy a port
 bot.startWebhook('/bot${BOT_TOKEN}', null, PORT)
-
-// app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`))
-// bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
-// bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT)
 
 bot.start((ctx) => {
     var msg = 'Grettings! I am the Wise, I can help with all your decisions. 👴🏻'
@@ -126,7 +119,6 @@ bot.command('draw', (ctx) =>{
 })
 
 //Pick one from list
-
 bot.command('pick', (ctx) =>{
     var i = ctx.message.text.trim().indexOf(' ')
     if (i > 0){
@@ -185,12 +177,3 @@ bot.on('successful_payment', (ctx) =>{
 
 //start poll uptdates
 bot.startPolling()
-
-// start express server
-// app.get('/', (req, res) => {
-//     res.redirect('https://t.me/TheWiseBot');
-//   });
-  
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-//   });
