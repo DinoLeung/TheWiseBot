@@ -135,7 +135,7 @@ var one = (txt) => {
         return (invalid_choices)
 }
 bot.command('pick', (ctx) => {
-    var i = txt.trim().indexOf(' ')
+    var i = ctx.message.text.trim().indexOf(' ')
     if (i > 0)
         return ctx.replyWithMarkdown(one(ctx.message.text.substr(i + 1)))
     else
