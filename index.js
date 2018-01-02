@@ -175,5 +175,9 @@ bot.on('successful_payment', (ctx) =>{
     return ctx.reply('Thank you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!')
 })
 
+//close event, hopefully work
+bot.on('exit', ({stop}) => stop())
+bot.on('SIGINT', ({stop}) => stop())
+
 //start poll uptdates
 bot.startPolling()
