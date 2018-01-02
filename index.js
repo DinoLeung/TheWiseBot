@@ -6,7 +6,7 @@ const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
 const MYID = process.env.MYID
 const PORT = process.env.PORT || 5000
 
-const bot = new Telegraf(BOT_TOKEN)
+const bot = new Telegraf(BOT_TOKEN, {username: 'TheWiseBot'})
 //So I can specfy a port
 bot.startWebhook('/bot${BOT_TOKEN}', null, PORT)
 
