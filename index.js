@@ -209,7 +209,10 @@ const buyOptions = Markup.inlineKeyboard([
   ]).extra()
 
 bot.command('nerddrink', (ctx) =>{
-    return ctx.replyWithInvoice(invoice, buyOptions)
+    if (ctx.message.chat.type !== "private")
+        return ctx.reply('We should talk about this privately. 😉')
+    else
+        return ctx.replyWithInvoice(invoice, buyOptions)
 })
 bot.on('pre_checkout_query', (ctx) => ctx.answerPreCheckoutQuery(true))
 bot.on('successful_payment', (ctx) =>{
