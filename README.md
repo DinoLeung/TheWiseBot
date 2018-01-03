@@ -24,5 +24,5 @@ Just start a conversation to [@TheWiseBot](https://t.me/TheWiseBot), or add him 
 TheWiseBot is a weekend project, and just for the memes.
 Whcih built upon
 * [Telegraf](https://github.com/telegraf/telegraf) - A Node.js framework wrapped the latest [Telegram Bot API](https://core.telegram.org/bots/api)
-* [node-localstorage](https://github.com/lmaccherone/node-localstorage) - Native localStorage API that runs on node.js
+* [node-localstorage](https://github.com/lmaccherone/node-localstorage) - Native localStorage API that runs on Node.js
 
