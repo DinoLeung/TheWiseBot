@@ -1,6 +1,11 @@
 const Telegraf = require('telegraf')
 const Markup = require('telegraf/markup')
 
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./storage');
+}
+
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
 const MYID = process.env.MYID
@@ -24,7 +29,7 @@ bot.start((ctx) => {
     msg += "\n\n"
     msg += 'You can also \/draw a 🃏 from a stack. If you wish you can enable \/singlestack mode to \/draw 🃏 from the same stack until you \/shuffle the stack.'
     msg += "\n\n"
-    msg += 'Or I can help you \/pick one from your choices'
+    msg += 'Or I can help you \/pick the one from your choices'
     msg += "\n\n"
     msg += '\/suggest your favourite decision making method if I can\'t provide you yet, the universe may accept your suggestions'
     msg += "\n\n"
@@ -87,12 +92,23 @@ const stack_o = ['♠️ A', '♠️ 2', '♠️ 3', '♠️ 4', '♠️ 5', '�
                 '♥️ A', '♥️ 2', '♥️ 3', '♥️ 4', '♥️ 5', '♥️ 6', '♥️ 7', '♥️ 8', '♥️ 9', '♥️ 10', '♥️ J', '♥️ Q', '♥️ K', 
                 '♣️ A', '♣️ 2', '♣️ 3', '♣️ 4', '♣️ 5', '♣️ 6', '♣️ 7', '♣️ 8', '♣️ 9', '♣️ 10', '♣️ J', '♣️ Q', '♣️ K', 
                 '♦️ A', '♦️ 2', '♦️ 3', '♦️ 4', '♦️ 5', '♦️ 6', '♦️ 7', '♦️ 8', '♦️ 9', '♦️ 10', '♦️ J', '♦️ Q', '♦️ K']
-var stack = stack_o
-var card = () => {
-    if (single_stack){
-        var card = stack[Math.floor(Math.random() * stack.length)]
-        stack = stack.filter(e => e !== card)
-        return (card + "\n" + stack.length + ' card(s) left in the stack.')
+var card = (inline, ctx) => {
+    var settings
+    if (inline){
+        settings = [false, stack_o]
+    } else {
+        if(localStorage.getItem(ctx.message.chat.id) === null)
+            localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
+        settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
+    }
+
+    if (settings[0]){
+        if (settings[1].length == 0)
+            settings[1] = stack_o
+        var card = settings[1][Math.floor(Math.random() * settings[1].length)]
+        settings[1] = settings[1].filter(e => e !== card)
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
+        return (card + "\n" + settings[1].length + ' card(s) left in the stack.')
     } else {
         var suits = ['♠️', '♥️', '♣️', '♦️']
         var ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -100,23 +116,33 @@ var card = () => {
     }
 }
 
-bot.command('draw', (ctx) => ctx.reply(card()))
+bot.command('draw', (ctx) => ctx.reply(card(false, ctx)))
 
 bot.command('singlestack', (ctx) =>{
+    if(localStorage.getItem(ctx.message.chat.id) === null)
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
+    var settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
+    var msg
     //trigger single stack mode
-    if (single_stack){
-        single_stack = false
-        return ctx.reply('Now you \/draw a card from a new stack every time.' + "\n" + 'Call again to enable.')
+    if (settings[0]){
+        settings[0] = false
+        msg = ('Now you \/draw a card from a new stack every time.' + "\n" + 'Call again to enable.')
     } else {
-        single_stack = true
-        return ctx.reply('Now you will never \/draw the same card until you \/shuffle the stack. ' + "\n" + 'Call again to disable.')
+        settings[0] = true
+        msg = ('Now you will never \/draw the same card until you \/shuffle the stack. ' + "\n" + 'Call again to disable.')
     }
+    localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
+    return ctx.reply(msg)
 })
 
 bot.command('shuffle', (ctx) =>{
+    if(localStorage.getItem(ctx.message.chat.id) === null)
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
+    var settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
     //restore the stack in single stack mode
-    if (single_stack){
-        stack = stack_o
+    if (settings[0]){
+        settings[1] = stack_o
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
         return ctx.reply('A brand new stack has been shuffled.' + "\n" + stack.length + ' card(s) left in the stack.')
     } else {
         return ctx.reply('You are not in \/singlestack mode.')
@@ -192,7 +218,7 @@ bot.on('successful_payment', (ctx) =>{
 })
 
 //Inline mode
-bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
+bot.on('inline_query', async (ctx) => {
     var result = [{type: "article",
                     id: "coin",
                     title: "Heads or Tails 🌝",
@@ -221,7 +247,7 @@ bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
                     id: "card",
                     title: "🃏",
                     input_message_content: {
-                        message_text: card(),
+                        message_text: card(true),
                         parse_mode: 'Markdown'
                     }
                 },
@@ -230,11 +256,11 @@ bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
                     title: "Pick from",
                     description: "🅰️, 🅱️, ...",
                     input_message_content: {
-                        message_text: one(inlineQuery.query),
+                        message_text: one(ctx.inlineQuery.query),
                         parse_mode: 'Markdown'
                     }
                 }]
-    return answerInlineQuery(result, 
+    return ctx.answerInlineQuery(result, 
         {
             is_personal: true,
             cache_time: 0
