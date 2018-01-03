@@ -54,6 +54,7 @@ bot.command('help', (ctx) =>{
     msg += '\/shuffle - reset the stack when \/singlestack is toggled'
     msg += "\n\n"
     msg += '*Choices*'
+    msg += "\n"
     msg += '\/pick - make the decision from your choices'
     msg += "\n\n"
     msg += '*Others*'
@@ -105,10 +106,10 @@ bot.command('singlestack', (ctx) =>{
     //trigger single stack mode
     if (single_stack){
         single_stack = false
-        return ctx.reply('Now you draw a card from a new stack every time.' + "\n" + 'Call again to enable.')
+        return ctx.reply('Now you \/draw a card from a new stack every time.' + "\n" + 'Call again to enable.')
     } else {
         single_stack = true
-        return ctx.reply('Now you will never draw the same card until you \/shuffle the stack. ' + "\n" + 'Call again to disable.')
+        return ctx.reply('Now you will never \/draw the same card until you \/shuffle the stack. ' + "\n" + 'Call again to disable.')
     }
 })
 
@@ -128,7 +129,7 @@ var invalid_choices = 'Huh? My hearing isn\'t too well. Try again with following
 var one = (txt) => {
     var options = txt.split(',').map(item => item.trim()).filter(item => item !== '')
     if (options.length == 1)
-        return (options[0] + 'has to be the one. Unlike the universe, there\'re multiple of them existing parallely.')
+        return (options[0] + ' is the one and the only one. Unlike the universe, there\'re multiple of them existing parallely.')
     else if (options.length > 0)
         return ('Out of ' + options.join(', ') +'\n*'+options[Math.floor(Math.random() * options.length)] + '* has to be the one. 😉')
     else 
@@ -226,7 +227,7 @@ bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
                 },
                     {type: "article",
                     id: "pick",
-                    title: "Pick from ...",
+                    title: "Pick from",
                     description: "🅰️, 🅱️, ...",
                     input_message_content: {
                         message_text: one(inlineQuery.query),
