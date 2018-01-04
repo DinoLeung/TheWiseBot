@@ -92,14 +92,16 @@ const stack_o = ['♠️ A', '♠️ 2', '♠️ 3', '♠️ 4', '♠️ 5', '�
                 '♥️ A', '♥️ 2', '♥️ 3', '♥️ 4', '♥️ 5', '♥️ 6', '♥️ 7', '♥️ 8', '♥️ 9', '♥️ 10', '♥️ J', '♥️ Q', '♥️ K', 
                 '♣️ A', '♣️ 2', '♣️ 3', '♣️ 4', '♣️ 5', '♣️ 6', '♣️ 7', '♣️ 8', '♣️ 9', '♣️ 10', '♣️ J', '♣️ Q', '♣️ K', 
                 '♦️ A', '♦️ 2', '♦️ 3', '♦️ 4', '♦️ 5', '♦️ 6', '♦️ 7', '♦️ 8', '♦️ 9', '♦️ 10', '♦️ J', '♦️ Q', '♦️ K']
+                
+var settings = (ctx) => {
+    if(localStorage.getItem(ctx.message.chat.id) === null)
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
+    return settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
+}
+
 var card = (inline, ctx) => {
-    var settings
     if (inline){
         settings = [false, stack_o]
-    } else {
-        if(localStorage.getItem(ctx.message.chat.id) === null)
-            localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
-        settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
     }
 
     if (settings[0]){
@@ -119,9 +121,6 @@ var card = (inline, ctx) => {
 bot.command('draw', (ctx) => ctx.reply(card(false, ctx)))
 
 bot.command('singlestack', (ctx) =>{
-    if(localStorage.getItem(ctx.message.chat.id) === null)
-        localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
-    var settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
     var msg
     //trigger single stack mode
     if (settings[0]){
@@ -136,9 +135,6 @@ bot.command('singlestack', (ctx) =>{
 })
 
 bot.command('shuffle', (ctx) =>{
-    if(localStorage.getItem(ctx.message.chat.id) === null)
-        localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
-    var settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
     //restore the stack in single stack mode
     if (settings[0]){
         settings[1] = stack_o
