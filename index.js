@@ -92,25 +92,27 @@ const stack_o = ['♠️ A', '♠️ 2', '♠️ 3', '♠️ 4', '♠️ 5', '�
                 '♥️ A', '♥️ 2', '♥️ 3', '♥️ 4', '♥️ 5', '♥️ 6', '♥️ 7', '♥️ 8', '♥️ 9', '♥️ 10', '♥️ J', '♥️ Q', '♥️ K', 
                 '♣️ A', '♣️ 2', '♣️ 3', '♣️ 4', '♣️ 5', '♣️ 6', '♣️ 7', '♣️ 8', '♣️ 9', '♣️ 10', '♣️ J', '♣️ Q', '♣️ K', 
                 '♦️ A', '♦️ 2', '♦️ 3', '♦️ 4', '♦️ 5', '♦️ 6', '♦️ 7', '♦️ 8', '♦️ 9', '♦️ 10', '♦️ J', '♦️ Q', '♦️ K']
-                
+
 var settings = (ctx) => {
     if(localStorage.getItem(ctx.message.chat.id) === null)
         localStorage.setItem(ctx.message.chat.id, JSON.stringify([false, stack_o]))
-    return settings = JSON.parse(localStorage.getItem(ctx.message.chat.id))
+    return JSON.parse(localStorage.getItem(ctx.message.chat.id))
 }
 
 var card = (inline, ctx) => {
-    if (inline){
-        settings = [false, stack_o]
-    }
+    var setting
+    if (inline)
+        setting = [false, stack_o]
+    else
+        setting = settings(ctx)
 
-    if (settings[0]){
-        if (settings[1].length == 0)
-            settings[1] = stack_o
-        var card = settings[1][Math.floor(Math.random() * settings[1].length)]
-        settings[1] = settings[1].filter(e => e !== card)
-        localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
-        return (card + "\n" + settings[1].length + ' card(s) left in the stack.')
+    if (setting[0]){
+        if (setting[1].length == 0)
+            setting[1] = stack_o
+        var card = setting[1][Math.floor(Math.random() * setting[1].length)]
+        setting[1] = setting[1].filter(e => e !== card)
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify(setting))
+        return (card + "\n" + setting[1].length + ' card(s) left in the stack.')
     } else {
         var suits = ['♠️', '♥️', '♣️', '♦️']
         var ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -122,24 +124,26 @@ bot.command('draw', (ctx) => ctx.reply(card(false, ctx)))
 
 bot.command('singlestack', (ctx) =>{
     var msg
+    var setting = settings(ctx)
     //trigger single stack mode
-    if (settings[0]){
-        settings[0] = false
+    if (setting[0]){
+        setting[0] = false
         msg = ('Now you \/draw a card from a new stack every time.' + "\n" + 'Call again to enable.')
     } else {
-        settings[0] = true
+        setting[0] = true
         msg = ('Now you will never \/draw the same card until you \/shuffle the stack. ' + "\n" + 'Call again to disable.')
     }
-    localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
+    localStorage.setItem(ctx.message.chat.id, JSON.stringify(setting))
     return ctx.reply(msg)
 })
 
 bot.command('shuffle', (ctx) =>{
+    var setting = settings(ctx)
     //restore the stack in single stack mode
-    if (settings[0]){
-        settings[1] = stack_o
-        localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
-        return ctx.reply('A brand new stack has been shuffled.' + "\n" + settings[1].length + ' card(s) left in the stack.')
+    if (setting[0]){
+        setting[1] = stack_o
+        localStorage.setItem(ctx.message.chat.id, JSON.stringify(setting))
+        return ctx.reply('A brand new stack has been shuffled.' + "\n" + setting[1].length + ' card(s) left in the stack.')
     } else {
         return ctx.reply('You are not in \/singlestack mode.')
     }
