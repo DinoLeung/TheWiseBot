@@ -143,7 +143,7 @@ bot.command('shuffle', (ctx) =>{
     if (settings[0]){
         settings[1] = stack_o
         localStorage.setItem(ctx.message.chat.id, JSON.stringify(settings))
-        return ctx.reply('A brand new stack has been shuffled.' + "\n" + stack.length + ' card(s) left in the stack.')
+        return ctx.reply('A brand new stack has been shuffled.' + "\n" + settings[1].length + ' card(s) left in the stack.')
     } else {
         return ctx.reply('You are not in \/singlestack mode.')
     }
