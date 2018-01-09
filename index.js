@@ -23,7 +23,7 @@ bot.telegram.getMe().then((botInfo) => {
 bot.startWebhook('/bot${BOT_TOKEN}', null, PORT)
 
 bot.start((ctx) => {
-    var msg = 'Greetings! I am the Wise, I can help with all your decisions. 👴🏻'
+    var msg = 'Greetings! I am the Wise, I can help with all your decisions. 🧙'
     msg += "\n\n"
     msg += 'You can simply \/flip a 🌝, \/roll a 🎲, or even \/roll3 🎲 at a time.'
     msg += "\n\n"
@@ -38,7 +38,7 @@ bot.start((ctx) => {
 })
 
 bot.command('help', (ctx) =>{
-    var msg = 'Greetings! I am the Wise, I can help you make decisions. 👴🏻'
+    var msg = 'Greetings! I am the Wise, I can help you make decisions. 🧙'
     msg += "\n\n"
     msg += '*Coins*'
     msg += "\n"
