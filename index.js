@@ -1,5 +1,4 @@
 const Telegraf = require('telegraf')
-const Markup = require('telegraf/markup')
 const Functions = require('./functions')
 
 if (typeof localStorage === "undefined" || localStorage === null) {
@@ -108,8 +107,9 @@ const invoice = {
         coupon: 'BURP'
     }
 }
-const buyOptions = Markup.inlineKeyboard([
-    Markup.payButton('💸 Buy')
+
+const buyOptions = Telegraf.Markup.inlineKeyboard([
+    Telegraf.Markup.payButton('💸 Buy')
   ]).extra()
 
 bot.command('nerddrink', (ctx) =>{
