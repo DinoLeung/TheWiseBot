@@ -1,8 +1,8 @@
 'use strict';
-import { Telegram, ContextMessageUpdate} from './typings/telegraf';
-import { InlineQueryResult} from "./typings/telegraf/telegram-types";
-import * as Telegraf from "telegraf";
-import * as Functions from "./functions";
+import { Telegram, ContextMessageUpdate} from './typings/telegraf'
+import { InlineQueryResult} from "./typings/telegraf/telegram-types"
+import * as Telegraf from "telegraf"
+import * as Functions from "./functions"
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
@@ -32,6 +32,7 @@ bot.start((ctx: ContextMessageUpdate) => {
             + '\/suggest your favourite decision making method if I can\'t provide you yet, the universe may accept your suggestions'
             + "\n\n"
             + 'Ask \/help for more.'
+    
     return ctx.reply(msg)
 })
 
@@ -107,7 +108,8 @@ const invoice = {
 
 const buyOptions = Telegraf.Markup.inlineKeyboard([
     Telegraf.Markup.payButton('💸 Buy')
-  ]).extra()
+]).extra()
+
 bot.command('nerddrink', (ctx: ContextMessageUpdate) =>{
     if (ctx.message.chat.type !== "private")
         return ctx.reply('We should talk about this privately. 😉')
@@ -171,6 +173,12 @@ bot.on('inline_query', async (ctx: ContextMessageUpdate) => {
             switch_pm_text: "",
             switch_pm_parameter: ""
         })
+})
+
+//Error handling
+bot.catch((err) => {
+    console.log(err)
+    bot.telegram.sendMessage(MYID, err)
 })
 
 //start poll uptdates
