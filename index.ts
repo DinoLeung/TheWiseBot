@@ -1,25 +1,15 @@
-/// <reference types="node" />
-///<reference path="./@types/telegraf/index.d.ts"/>
 'use strict';
-import { Telegram, Context , InlineQueryResultArticle} from "./@types/telegraf";
-// import { Telegram, Context , InlineQueryResultArticle} from "telegraf";
+import { Telegram, ContextMessageUpdate} from './typings/telegraf';
+import { InlineQueryResult} from "./typings/telegraf/telegram-types";
 import * as Telegraf from "telegraf";
-import * as Functions from "./functions"
-
-if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = require('node-localstorage').LocalStorage;
-    localStorage = new LocalStorage('./storage');
-}
+import * as Functions from "./functions";
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN
 const MYID = process.env.MYID
 const PORT = process.env.PORT || 443
 
-// const bot = new Telegraf(BOT_TOKEN)
-
-const telegram: Telegram = new Telegram(BOT_TOKEN);
-const bot = new Telegraf(BOT_TOKEN, { telegram });
+const bot = new Telegraf(BOT_TOKEN)
 
 //Set the bot name
 bot.telegram.getMe().then((botInfo: any) => {
@@ -30,7 +20,7 @@ bot.telegram.getMe().then((botInfo: any) => {
 //So I can specfy a port
 bot.startWebhook('/bot${BOT_TOKEN}', null, PORT)
 
-bot.start((ctx: Context) => {
+bot.start((ctx: ContextMessageUpdate) => {
     var msg = 'Greetings! I am the Wise, I can help with all your decisions. 🧙'
             + "\n\n"
             + 'You can simply \/flip a 🌝, \/roll a 🎲, or even \/roll3 🎲 at a time.'
@@ -45,7 +35,7 @@ bot.start((ctx: Context) => {
     return ctx.reply(msg)
 })
 
-bot.command('help', (ctx: Context) =>{
+bot.command('help', (ctx: ContextMessageUpdate) =>{
     var msg = 'Greetings! I am the Wise, I can help you make decisions. 🧙'
             + "\n\n"
             + '*Coins*'
@@ -80,22 +70,22 @@ bot.command('help', (ctx: Context) =>{
 })
 
 //Coin
-bot.command('flip', (ctx: Context) => ctx.reply(Functions.coin()))
+bot.command('flip', (ctx: ContextMessageUpdate) => ctx.reply(Functions.coin()))
 
 //Dice
-bot.command('roll', (ctx: Context) => ctx.reply(Functions.die()))
-bot.command('roll3', (ctx: Context) => ctx.reply(Functions.dice()))
+bot.command('roll', (ctx: ContextMessageUpdate) => ctx.reply(Functions.die()))
+bot.command('roll3', (ctx: ContextMessageUpdate) => ctx.reply(Functions.dice()))
 
 //Stack
-bot.command('draw', (ctx: Context) => ctx.reply(Functions.card(String(ctx.message.chat.id))))
-bot.command('singlestack', (ctx: Context) => ctx.reply(Functions.toggleSingle(String(ctx.message.chat.id))))
-bot.command('shuffle', (ctx: Context) => ctx.reply(Functions.shuffle(String(ctx.message.chat.id))))
+bot.command('draw', (ctx: ContextMessageUpdate) => ctx.reply(Functions.card(String(ctx.message.chat.id))))
+bot.command('singlestack', (ctx: ContextMessageUpdate) => ctx.reply(Functions.toggleSingle(String(ctx.message.chat.id))))
+bot.command('shuffle', (ctx: ContextMessageUpdate) => ctx.reply(Functions.shuffle(String(ctx.message.chat.id))))
 
 //Pick one from list
-bot.command('pick', (ctx: Context) => ctx.replyWithMarkdown(Functions.one(ctx.message.text)))
+bot.command('pick', (ctx: ContextMessageUpdate) => ctx.replyWithMarkdown(Functions.one(ctx.message.text)))
 
 //New suggestion from users
-bot.command('suggest', (ctx: Context) => ctx.replyWithMarkdown(Functions.suggest(ctx.message.text, ctx.from.username, MYID, bot.telegram)))
+bot.command('suggest', (ctx: ContextMessageUpdate) => ctx.replyWithMarkdown(Functions.suggest(ctx.message.text, ctx.from.username, MYID, bot.telegram)))
 
 
 //Donation section
@@ -111,29 +101,28 @@ const invoice = {
     prices: [
         { label: 'Nerd Drink', amount: 1000 }
     ],
-    payload: {
-        coupon: 'BURP'
-    }
+    payload: 'BURP'
+    
 }
 
 const buyOptions = Telegraf.Markup.inlineKeyboard([
     Telegraf.Markup.payButton('💸 Buy')
   ]).extra()
-// bot.command('nerddrink', (ctx: Context) =>{
-//     if (ctx.message.chat.type !== "private")
-//         return ctx.reply('We should talk about this privately. 😉')
-//     else
-//         return ctx.replyWithInvoice(invoice, buyOptions)
-// })
-// bot.on('pre_checkout_query', (ctx: Context) => ctx.answerPreCheckoutQuery(true))
-// bot.on('successful_payment', (ctx: Context) =>{
-//     ctx.telegram.sendMessage(MYID, '@' + ctx.from.username + ' bought you a nerd drink! 🍻')
-//     return ctx.reply('May the universe be with you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!')
-// })
+bot.command('nerddrink', (ctx: ContextMessageUpdate) =>{
+    if (ctx.message.chat.type !== "private")
+        return ctx.reply('We should talk about this privately. 😉')
+    else
+        return ctx.replyWithInvoice(invoice, buyOptions)
+})
+bot.on('pre_checkout_query', (ctx: ContextMessageUpdate) => ctx.answerPreCheckoutQuery(true))
+bot.on('successful_payment', (ctx: ContextMessageUpdate) =>{
+    ctx.telegram.sendMessage(MYID, '@' + ctx.from.username + ' bought you a nerd drink! 🍻')
+    return ctx.reply('May the universe be with you! 🍻'+"\n"+'As you may know, energy bill is going up crazy, the Wise cannot make it on his own. Your help is very appreciated!')
+})
 
 //Inline mode
-bot.on('inline_query', async (ctx: Context) => {
-    var result: InlineQueryResultArticle[] = [{type: "article",
+bot.on('inline_query', async (ctx: ContextMessageUpdate) => {
+    var result: InlineQueryResult[] = [{type: "article",
                     id: "coin",
                     title: "Heads or Tails 🌝",
                     input_message_content: {
