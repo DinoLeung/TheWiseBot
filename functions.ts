@@ -1,9 +1,14 @@
+//Data Store
+const LocalStorage = require('node-localstorage').LocalStorage;
+if (typeof localStorage === "undefined" || localStorage === null) 
+    var localStorage = new LocalStorage('./storage');
+
 //Coin
-exports.coin = () => (Math.random() >= 0.5 ? "Heads" : "Tails")
+export var coin = () => (Math.random() >= 0.5 ? "Heads" : "Tails")
 
 //Dice
-exports.die = () => (Math.floor(Math.random() * 6) + 1)
-exports.dice = () => {
+export var die = () => String(Math.floor(Math.random() * 6) + 1)
+export var dice = () => {
         return (Math.floor(Math.random() * 6) + 1) + ' - ' + 
                 (Math.floor(Math.random() * 6) + 1) + ' - ' +
                 (Math.floor(Math.random() * 6) + 1)
@@ -11,28 +16,28 @@ exports.dice = () => {
 
 //Stack
 const stack_o = ['♠️ A', '♠️ 2', '♠️ 3', '♠️ 4', '♠️ 5', '♠️ 6', '♠️ 7', '♠️ 8', '♠️ 9', '♠️ 10', '♠️ J', '♠️ Q', '♠️ K',
-                        '♥️ A', '♥️ 2', '♥️ 3', '♥️ 4', '♥️ 5', '♥️ 6', '♥️ 7', '♥️ 8', '♥️ 9', '♥️ 10', '♥️ J', '♥️ Q', '♥️ K',
-                        '♣️ A', '♣️ 2', '♣️ 3', '♣️ 4', '♣️ 5', '♣️ 6', '♣️ 7', '♣️ 8', '♣️ 9', '♣️ 10', '♣️ J', '♣️ Q', '♣️ K',
-                        '♦️ A', '♦️ 2', '♦️ 3', '♦️ 4', '♦️ 5', '♦️ 6', '♦️ 7', '♦️ 8', '♦️ 9', '♦️ 10', '♦️ J', '♦️ Q', '♦️ K']
+                '♥️ A', '♥️ 2', '♥️ 3', '♥️ 4', '♥️ 5', '♥️ 6', '♥️ 7', '♥️ 8', '♥️ 9', '♥️ 10', '♥️ J', '♥️ Q', '♥️ K',
+                '♣️ A', '♣️ 2', '♣️ 3', '♣️ 4', '♣️ 5', '♣️ 6', '♣️ 7', '♣️ 8', '♣️ 9', '♣️ 10', '♣️ J', '♣️ Q', '♣️ K',
+                '♦️ A', '♦️ 2', '♦️ 3', '♦️ 4', '♦️ 5', '♦️ 6', '♦️ 7', '♦️ 8', '♦️ 9', '♦️ 10', '♦️ J', '♦️ Q', '♦️ K']
 
-var settings = (id) => {
+var settings = (id: string) => {
     if(localStorage.getItem(id) === null)
         localStorage.setItem(id, JSON.stringify([false, stack_o]))
     return JSON.parse(localStorage.getItem(id))
 }
 
-exports.card = (inline, id) => {
+export var card = (id?: string) => {
     var setting
-    if (inline)
-        setting = [false, stack_o]
-    else
+    if(id)
         setting = settings(id)
+    else
+        setting = [false, stack_o]
 
     if (setting[0]){
         if (setting[1].length == 0)
             setting[1] = stack_o
         var card = setting[1][Math.floor(Math.random() * setting[1].length)]
-        setting[1] = setting[1].filter(e => e !== card)
+        setting[1] = setting[1].filter((e: string) => e !== card)
         localStorage.setItem(id, JSON.stringify(setting))
         return (card + "\n" + setting[1].length + ' card(s) left in the stack.')
     } else {
@@ -42,7 +47,7 @@ exports.card = (inline, id) => {
     }
 }
 
-exports.toggleSingle = (id) => {
+export var toggleSingle = (id: string) => {
     var msg
     var setting = settings(id)
     //trigger single stack mode
@@ -57,7 +62,7 @@ exports.toggleSingle = (id) => {
     return msg
 }
 
-exports.shuffle = (id) => {
+export var shuffle = (id: string) => {
     var setting = settings(id)
     //restore the stack in single stack mode
     if (setting[0]){
@@ -70,7 +75,7 @@ exports.shuffle = (id) => {
 }
 
 //Pick one from list
-exports.one = (txt) => {
+export var one = (txt: string) => {
     var invalid_choices = 'Huh? My hearing isn\'t too well. Try again with following pattern: \/pick 🅰️, 🅱️, ...'
     var i = txt.trim().indexOf(' ')
     if (i > 0){
@@ -86,7 +91,7 @@ exports.one = (txt) => {
         return (invalid_choices)
 }
 
-exports.suggest = (txt, username, MYID, tele) => {
+export var suggest = (txt: string, username: string, MYID: string, tele: any) => {
     var invalid_suggestion = 'Huh? My hearing isn\'t too well. Try again with \/suggest and follow by your suggestions. The universe won\'t accept blank suggestions.'
     var i = txt.trim().indexOf(' ')
     if (i > 0){
