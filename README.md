@@ -18,11 +18,10 @@ Just start a conversation to [@TheWiseBot](https://t.me/TheWiseBot), or add him 
 
 `/pick` - make the decision from your choices
 
-`/suggest` - suggest a decision makingmethod
+`/suggest` - suggest a decision making method
 
 ## Built with
 TheWiseBot is a weekend project, and just for the memes.
-Whcih built upon
+Which built upon
 * [Telegraf](https://github.com/telegraf/telegraf) - A Node.js framework wrapped the latest [Telegram Bot API](https://core.telegram.org/bots/api)
-* [node-localstorage](https://github.com/lmaccherone/node-localstorage) - Native localStorage API that runs on Node.js
 
