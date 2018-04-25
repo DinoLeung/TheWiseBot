@@ -1,10 +1,10 @@
 import * as fs from "fs";
 // Coin
-export let coin = () => (Math.random() >= 0.5 ? "Heads" : "Tails");
+export const coin = () => (Math.random() >= 0.5 ? "Heads" : "Tails");
 
 // Dice
-export let die = () => String(Math.floor(Math.random() * 6) + 1);
-export let dice = () => {
+export const die = () => String(Math.floor(Math.random() * 6) + 1);
+export const dice = () => {
         return (Math.floor(Math.random() * 6) + 1) + " - " +
                 (Math.floor(Math.random() * 6) + 1) + " - " +
                 (Math.floor(Math.random() * 6) + 1);
@@ -43,7 +43,7 @@ const setSetting = (id: string, json?: JSON) => {
     fs.writeFileSync("./storage/" + id, JSON.stringify(json));
 };
 
-export let card = (id?: string) => {
+export const card = (id?: string) => {
     let setting;
     if (id) {
         setting = getSetting(id);
@@ -65,9 +65,10 @@ export let card = (id?: string) => {
     }
 };
 
-export let toggleSingle = (id: string) => {
+export const toggleSingle = (id: string) => {
     let msg;
-    const setting = getSetting(id);
+    // tslint:disable-next-line:prefer-const
+    let setting = getSetting(id);
     // trigger single stack mode
     if (setting.single) {
         setting.single = false;
@@ -81,8 +82,9 @@ export let toggleSingle = (id: string) => {
     return msg;
 };
 
-export let shuffle = (id: string) => {
-    const setting = getSetting(id);
+export const shuffle = (id: string) => {
+    // tslint:disable-next-line:prefer-const
+    let setting = getSetting(id);
     // restore the stack in single stack mode
     if (setting.single) {
         setting.stack = originalStack;
@@ -94,7 +96,7 @@ export let shuffle = (id: string) => {
 };
 
 // Pick one from list
-export let one = (txt: string) => {
+export const one = (txt: string) => {
     const invalidChoices = "Huh? My hearing isn't too well. Try again with following pattern: \/pick 🅰️, 🅱️, ...";
     const i = txt.trim().indexOf(" ");
     if (i > 0) {
@@ -107,15 +109,15 @@ export let one = (txt: string) => {
             return ("Out of " + options.join(", ") + "\n*" +
                 options[Math.floor(Math.random() * options.length)] +
                 "* has to be the one. 😉");
-             } else {
+        } else {
             return (invalidChoices);
-             }
+        }
     } else {
         return (invalidChoices);
     }
 };
 
-export let suggest = (txt: string, username: string, MYID: string, tele: any) => {
+export const suggest = (txt: string, username: string, MYID: string, tele: any) => {
     // tslint:disable-next-line:max-line-length
     const invalidSuggestion = "Huh? My hearing isn't too well. Try again with \/suggest and follow by your suggestions. The universe won't accept blank suggestions.";
     const i = txt.trim().indexOf(" ");
