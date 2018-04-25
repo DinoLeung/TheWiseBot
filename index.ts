@@ -68,8 +68,21 @@ bot.command("help", (ctx: ContextMessageUpdate) => {
             + "\n"
             + "\/suggest - suggest a decision making method, or share me you view of universe"
             + "\n"
-            + "\/nerddrink - buy the wise a nerd drink, he needs energy to make decisions";
+            + "\/nerddrink - buy the wise a nerd drink, he needs energy to make decisions"
+            + "\n"
+            + "\/github - check out how the wise looks like under the hood";
 
+    return ctx.replyWithMarkdown(msg);
+});
+
+// Brief descriptions and GitHub link
+bot.command("github", (ctx: ContextMessageUpdate) => {
+    const msg = "@TheWiseBot is on "
+            + "[GitHub](https://github.com/DinoLeung/TheWiseBot)"
+            + "\n\n"
+            + "If you can make me more wise, please fork me!"
+            + "\n"
+            + "Pull reqiestes are highly welcome!";
     return ctx.replyWithMarkdown(msg);
 });
 
