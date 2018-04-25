@@ -87,7 +87,7 @@ bot.command("singlestack", (ctx: ContextMessageUpdate) =>
 bot.command("shuffle", (ctx: ContextMessageUpdate) => ctx.reply(Functions.shuffle(String(ctx.message.chat.id))));
 
 // Pick one from list
-bot.command("pick", (ctx: ContextMessageUpdate) => ctx.replyWithMarkdown(Functions.one(ctx.message.text)));
+bot.command("pick", (ctx: ContextMessageUpdate) => ctx.replyWithMarkdown(Functions.one(ctx.message.text, false)));
 
 // New suggestion from users
 bot.command("suggest", (ctx: ContextMessageUpdate) =>
@@ -179,7 +179,7 @@ bot.on("inline_query", async (ctx: ContextMessageUpdate) => {
             description: "🅰️, 🅱️, ...",
             input_message_content:
             {
-                message_text: Functions.one(ctx.inlineQuery.query),
+                message_text: Functions.one(ctx.inlineQuery.query, true),
                 parse_mode: "Markdown",
             },
         }];

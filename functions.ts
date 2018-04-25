@@ -101,11 +101,11 @@ export const shuffle = (id: string) => {
 };
 
 // Pick one from list
-export const one = (txt: string) => {
+export const one = (txt: string, inline: boolean) => {
     const invalidChoices = "Huh? My hearing isn't too well. Try again with following pattern: \/pick 🅰️, 🅱️, ...";
     const i = txt.trim().indexOf(" ");
+    txt = txt.substr(i + (inline ? -i : 1));
     if (i > 0) {
-        txt = txt.substr(i + 1);
         const options = txt.split(",").map((item) => item.trim()).filter((item) => item !== "");
         if (options.length === 1) {
             return (options[0] +
