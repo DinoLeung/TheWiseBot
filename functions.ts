@@ -1,4 +1,5 @@
 import * as fs from "fs";
+const dir = "./storage/";
 // Coin
 export const coin = () => (Math.random() >= 0.5 ? "Heads" : "Tails");
 
@@ -24,7 +25,7 @@ const originalData = JSON.parse(JSON.stringify({
 
 const getSetting = (id: string) => {
     try {
-        const json = JSON.parse(fs.readFileSync("./storage/" + id, "utf8"));
+        const json = JSON.parse(fs.readFileSync(dir + id, "utf8"));
         return json;
     } catch (err) {
         if (err.code === "ENOENT") {
@@ -40,7 +41,11 @@ const getSetting = (id: string) => {
 };
 
 const setSetting = (id: string, json?: JSON) => {
-    fs.writeFileSync("./storage/" + id, JSON.stringify(json));
+    if (!fs.existsSync(dir)) {
+        // directory not found
+        fs.mkdirSync(dir);
+    }
+    fs.writeFileSync(dir + id, JSON.stringify(json));
 };
 
 export const card = (id?: string) => {
