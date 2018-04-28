@@ -31,12 +31,14 @@ bot.start((ctx: ContextMessageUpdate) => {
             + "\n\n"
             + "Or I can help you \/pick the one from your choices"
             + "\n\n"
+            + "You can always \/learn stuff from me, just ask!"
+            + "\n\n"
             // tslint:disable-next-line:max-line-length
             + "\/suggest your favourite decision making method if I can't provide you yet, the universe may accept your suggestions"
             + "\n\n"
             + "Ask \/help for more.";
 
-    return ctx.reply(msg);
+    return ctx.replyWithMarkdown(msg);
 });
 
 bot.command("help", (ctx: ContextMessageUpdate) => {
@@ -66,7 +68,9 @@ bot.command("help", (ctx: ContextMessageUpdate) => {
             + "\n\n"
             + "*Others*"
             + "\n"
-            + "\/suggest - suggest a decision making method, or share me you view of universe"
+            + "\/learn - learn from the wise"
+            + "\n"
+            + "\/suggest - suggest a decision making method, or sharenyour view of the universe"
             + "\n"
             + "\/nerddrink - buy the wise a nerd drink, he needs energy to make decisions"
             + "\n"
@@ -94,17 +98,26 @@ bot.command("roll", (ctx: ContextMessageUpdate) => ctx.reply(Functions.die()));
 bot.command("roll3", (ctx: ContextMessageUpdate) => ctx.reply(Functions.dice()));
 
 // Stack
-bot.command("draw", (ctx: ContextMessageUpdate) => ctx.reply(Functions.card(String(ctx.message.chat.id))));
+bot.command("draw", (ctx: ContextMessageUpdate) =>
+    ctx.reply(Functions.card(String(ctx.message.chat.id))));
 bot.command("singlestack", (ctx: ContextMessageUpdate) =>
     ctx.reply(Functions.toggleSingle(String(ctx.message.chat.id))));
-bot.command("shuffle", (ctx: ContextMessageUpdate) => ctx.reply(Functions.shuffle(String(ctx.message.chat.id))));
+bot.command("shuffle", (ctx: ContextMessageUpdate) =>
+    ctx.reply(Functions.shuffle(String(ctx.message.chat.id))));
 
 // Pick one from list
-bot.command("pick", (ctx: ContextMessageUpdate) => ctx.replyWithMarkdown(Functions.one(ctx.message.text, false)));
+bot.command("pick", (ctx: ContextMessageUpdate) =>
+    ctx.replyWithMarkdown(Functions.one(ctx.message.text.replace("\/pick", ""))));
+
+// Let me google that
+bot.command("learn", (ctx: ContextMessageUpdate) =>
+    ctx.replyWithMarkdown(Functions.letMeGoogle(ctx.message.text.replace("\/learn", ""))));
 
 // New suggestion from users
 bot.command("suggest", (ctx: ContextMessageUpdate) =>
-    ctx.replyWithMarkdown(Functions.suggest(ctx.message.text, ctx.from.username, MYID, bot.telegram)));
+    ctx.replyWithMarkdown(Functions.suggest(
+        ctx.message.text.replace("\/suggest", ""),
+        ctx.from.username, MYID, bot.telegram)));
 
 // Donation section
 const invoice = {
@@ -192,10 +205,21 @@ bot.on("inline_query", async (ctx: ContextMessageUpdate) => {
             description: "🅰️, 🅱️, ...",
             input_message_content:
             {
-                message_text: Functions.one(ctx.inlineQuery.query, true),
+                message_text: Functions.one(ctx.inlineQuery.query),
                 parse_mode: "Markdown",
             },
-        }];
+        },
+        {
+            type: "article",
+            id: "google",
+            title: "Ask the wise🧙 ...",
+            input_message_content:
+            {
+                message_text: Functions.letMeGoogle(ctx.inlineQuery.query),
+                parse_mode: "Markdown",
+            },
+        },
+    ];
     return ctx.answerInlineQuery(result,
         {
             is_personal: true,

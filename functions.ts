@@ -1,5 +1,7 @@
 import * as fs from "fs";
 const dir = "./storage/";
+const theHeartSutra = fs.readFileSync("./files/the_heart_sutra", "utf8");
+
 // Coin
 export const coin = () => (Math.random() >= 0.5 ? "Heads" : "Tails");
 
@@ -101,11 +103,10 @@ export const shuffle = (id: string) => {
 };
 
 // Pick one from list
-export const one = (txt: string, inline: boolean) => {
+export const one = (txt: string) => {
     const invalidChoices = "Huh? My hearing isn't too well. Try again with following pattern: \/pick 🅰️, 🅱️, ...";
-    const i = txt.trim().indexOf(" ");
-    txt = txt.substr(i + (inline ? -i : 1));
-    if (i > 0) {
+    txt = txt.trim();
+    if (txt.length > 0) {
         const options = txt.split(",").map((item) => item.trim()).filter((item) => item !== "");
         if (options.length === 1) {
             return (options[0] +
@@ -122,18 +123,29 @@ export const one = (txt: string, inline: boolean) => {
     }
 };
 
+export const letMeGoogle = (txt: string) => {
+    txt = txt.trim();
+    if (txt.length > 0) {
+        const keywords = txt.split(" ").map((item) => encodeURIComponent(item.trim())).filter((item) => item !== "");
+        const str = "Any fool can know. The point is to understand."
+                    + "\n"
+                    + "I found a lot regarding to *" + txt + "* you could know "
+                    + "[here](" + "http://www.letmegooglethat.com/?q=" + keywords.join("+") + ")."
+                    + "\n"
+                    + "But can you understand, it's depends on you.";
+        return str;
+    } else {
+        return theHeartSutra;
+    }
+};
+
 export const suggest = (txt: string, username: string, MYID: string, tele: any) => {
     // tslint:disable-next-line:max-line-length
     const invalidSuggestion = "Huh? My hearing isn't too well. Try again with \/suggest and follow by your suggestions. The universe won't accept blank suggestions.";
-    const i = txt.trim().indexOf(" ");
-    if (i > 0) {
-        txt = txt.substr(i + 1);
-        if (txt.trim().length > 0) {
-            tele.sendMessage(MYID, "@" + username + " suggested to " + txt);
-            return "May the universe be with you, I will look into this soon. 💪";
-        } else {
-            return invalidSuggestion;
-        }
+    txt = txt.trim();
+    if (txt.length > 0) {
+        tele.sendMessage(MYID, "@" + username + " suggested to " + txt);
+        return "May the universe be with you, I will look into this soon. 💪";
     } else {
         return invalidSuggestion;
     }
