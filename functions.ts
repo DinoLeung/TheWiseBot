@@ -130,7 +130,8 @@ export const letMeGoogle = (txt: string) => {
         const str = "Any fool can know. The point is to understand."
                     + "\n"
                     + "I found a lot regarding to *" + txt + "* you could know "
-                    + "[here](" + "http://www.letmegooglethat.com/?q=" + keywords.join("+") + ")."
+                    + "[here](" + "http://lmgtfy.com/?iie=1&q=" + keywords.join("+") + ")."
+                    // + "[here](" + "http://www.letmegooglethat.com/?q=" + keywords.join("+") + ")."
                     + "\n"
                     + "But can you understand, it's depends on you.";
         return str;
