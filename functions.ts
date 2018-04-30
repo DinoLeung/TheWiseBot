@@ -59,10 +59,16 @@ export const card = (id?: string) => {
     }
 
     if (setting.single) {
-        const c = setting.stack[Math.floor(Math.random() * setting.stack.length)];
-        setting.stack = setting.stack.filter((e: string) => e !== c);
-        setSetting(id, setting);
-        return (c + "\n" + setting.stack.length + " card(s) left in the stack.");
+        if  (setting.stack.length === 0) {
+            return ("\nYou wanna dance, you gotta pay the band, you understand? "
+                + "If you wanna \/draw, you gotta \/shuffle the stack");
+        } else {
+            const c = setting.stack[Math.floor(Math.random() * setting.stack.length)];
+            setting.stack = setting.stack.filter((e: string) => e !== c);
+            setSetting(id, setting);
+            return (c + "\n" + setting.stack.length + " card(s) left in the stack.");
+        }
+
     } else {
         const suits = ["♠️", "♥️", "♣️", "♦️"];
         const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
