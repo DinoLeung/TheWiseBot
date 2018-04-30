@@ -133,7 +133,7 @@ export const letMeGoogle = (txt: string) => {
                     + "[here](" + "http://lmgtfy.com/?iie=1&q=" + keywords.join("+") + ")."
                     // + "[here](" + "http://www.letmegooglethat.com/?q=" + keywords.join("+") + ")."
                     + "\n"
-                    + "But can you understand, it's depends on you.";
+                    + "But can you understand, it's entirely depends on you.";
         return str;
     } else {
         return theHeartSutra;

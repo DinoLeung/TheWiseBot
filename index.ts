@@ -42,7 +42,7 @@ bot.start((ctx: ContextMessageUpdate) => {
 });
 
 bot.command("help", (ctx: ContextMessageUpdate) => {
-    const msg = "Greetings! I am the Wise, I can help you make decisions. 🧙"
+    const msg = "Greetings! I am the Wise, I can help with all your decisions. 🧙"
             + "\n\n"
             + "*Coins*"
             + "\n"
@@ -212,7 +212,8 @@ bot.on("inline_query", async (ctx: ContextMessageUpdate) => {
         {
             type: "article",
             id: "google",
-            title: "Ask the wise🧙 ...",
+            title: "Ask the wise ...",
+            description: "🧙",
             input_message_content:
             {
                 message_text: Functions.letMeGoogle(ctx.inlineQuery.query),
