@@ -121,10 +121,14 @@ bot.command("learn", (ctx: ContextMessageUpdate) => {
 });
 
 // New suggestion from users
-bot.command("suggest", (ctx: ContextMessageUpdate) =>
+bot.command("suggest", (ctx: ContextMessageUpdate) => {
+    // tslint:disable-next-line:prefer-const
+    let items = ctx.message.text.split(" ");
+    items.shift();
     ctx.replyWithMarkdown(Functions.suggest(
-        ctx.message.text.replace("\/suggest", ""),
-        ctx.from.username, MYID, bot.telegram)));
+        items.join(" "),
+        ctx.from.username, MYID, bot.telegram));
+});
 
 // Donation section
 const invoice = {
