@@ -106,12 +106,19 @@ bot.command("shuffle", (ctx: ContextMessageUpdate) =>
     ctx.reply(Functions.shuffle(String(ctx.message.chat.id))));
 
 // Pick one from list
-bot.command("pick", (ctx: ContextMessageUpdate) =>
-    ctx.replyWithMarkdown(Functions.one(ctx.message.text.replace("\/pick", ""))));
-
+bot.command("pick", (ctx: ContextMessageUpdate) => {
+    // tslint:disable-next-line:prefer-const
+    let items = ctx.message.text.split(" ");
+    items.shift();
+    ctx.replyWithMarkdown(Functions.one(items.join(" ")));
+});
 // Let me google that
-bot.command("learn", (ctx: ContextMessageUpdate) =>
-    ctx.replyWithMarkdown(Functions.letMeGoogle(ctx.message.text.replace("\/learn", ""))));
+bot.command("learn", (ctx: ContextMessageUpdate) => {
+    // tslint:disable-next-line:prefer-const
+    let items = ctx.message.text.split(" ");
+    items.shift();
+    ctx.replyWithMarkdown(Functions.letMeGoogle(items.join(" ")));
+});
 
 // New suggestion from users
 bot.command("suggest", (ctx: ContextMessageUpdate) =>
