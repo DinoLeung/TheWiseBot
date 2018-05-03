@@ -18,6 +18,8 @@ Just start a conversation to [@TheWiseBot](https://t.me/TheWiseBot), or add him 
 
 `/pick` - make the decision from your choices
 
+`/learn` - get knowledge from the wise
+
 `/suggest` - suggest a decision making method
 
 ## Built with

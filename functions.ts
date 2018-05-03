@@ -109,9 +109,10 @@ export const shuffle = (id: string) => {
 };
 
 // Pick one from list
-export const one = (txt: string) => {
+export const one = (txt: string, inline: boolean) => {
     const invalidChoices = "Huh? My hearing isn't too well. Try again with following pattern: \/pick 🅰️, 🅱️, ...";
     txt = txt.trim();
+    if (!inline) { txt = removeCommandHead(txt); }
     if (txt.length > 0) {
         const options = txt.split(",").map((item) => item.trim()).filter((item) => item !== "");
         if (options.length === 1) {
@@ -129,8 +130,9 @@ export const one = (txt: string) => {
     }
 };
 
-export const letMeGoogle = (txt: string) => {
+export const letMeGoogle = (txt: string, inline: boolean) => {
     txt = txt.trim();
+    if (!inline) { txt = removeCommandHead(txt); }
     if (txt.length > 0) {
         const keywords = txt.split(" ").map((item) => encodeURIComponent(item.trim())).filter((item) => item !== "");
         const str = "Any fool can know. The point is to understand."
@@ -146,14 +148,24 @@ export const letMeGoogle = (txt: string) => {
     }
 };
 
-export const suggest = (txt: string, username: string, MYID: string, tele: any) => {
+export const suggest = (txt: string, username: string, MYID: string, tele: any, inline: boolean) => {
     // tslint:disable-next-line:max-line-length
     const invalidSuggestion = "Huh? My hearing isn't too well. Try again with \/suggest and follow by your suggestions. The universe won't accept blank suggestions.";
     txt = txt.trim();
+    if (!inline) { txt = removeCommandHead(txt); }
     if (txt.length > 0) {
         tele.sendMessage(MYID, "@" + username + " suggested to " + txt);
         return "May the universe be with you, I will look into this soon. 💪";
     } else {
         return invalidSuggestion;
+    }
+};
+
+const removeCommandHead = (txt: string) => {
+    const i = txt.indexOf(" ");
+    if (i < 0) {
+        return "";
+    } else {
+        return txt.substr(i + 1);
     }
 };

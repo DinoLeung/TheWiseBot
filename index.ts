@@ -106,29 +106,18 @@ bot.command("shuffle", (ctx: ContextMessageUpdate) =>
     ctx.reply(Functions.shuffle(String(ctx.message.chat.id))));
 
 // Pick one from list
-bot.command("pick", (ctx: ContextMessageUpdate) => {
-    // tslint:disable-next-line:prefer-const
-    let items = ctx.message.text.split(" ");
-    items.shift();
-    ctx.replyWithMarkdown(Functions.one(items.join(" ")));
-});
+bot.command("pick", (ctx: ContextMessageUpdate) =>
+    ctx.replyWithMarkdown(Functions.one(ctx.message.text, false)));
+
 // Let me google that
-bot.command("learn", (ctx: ContextMessageUpdate) => {
-    // tslint:disable-next-line:prefer-const
-    let items = ctx.message.text.split(" ");
-    items.shift();
-    ctx.replyWithMarkdown(Functions.letMeGoogle(items.join(" ")));
-});
+bot.command("learn", (ctx: ContextMessageUpdate) =>
+    ctx.replyWithMarkdown(Functions.letMeGoogle(ctx.message.text, false)));
 
 // New suggestion from users
-bot.command("suggest", (ctx: ContextMessageUpdate) => {
-    // tslint:disable-next-line:prefer-const
-    let items = ctx.message.text.split(" ");
-    items.shift();
+bot.command("suggest", (ctx: ContextMessageUpdate) =>
     ctx.replyWithMarkdown(Functions.suggest(
-        items.join(" "),
-        ctx.from.username, MYID, bot.telegram));
-});
+        ctx.message.text,
+        ctx.from.username, MYID, bot.telegram, false)));
 
 // Donation section
 const invoice = {
@@ -216,7 +205,7 @@ bot.on("inline_query", async (ctx: ContextMessageUpdate) => {
             description: "🅰️, 🅱️, ...",
             input_message_content:
             {
-                message_text: Functions.one(ctx.inlineQuery.query),
+                message_text: Functions.one(ctx.inlineQuery.query, true),
                 parse_mode: "Markdown",
             },
         },
@@ -227,7 +216,7 @@ bot.on("inline_query", async (ctx: ContextMessageUpdate) => {
             description: "🧙",
             input_message_content:
             {
-                message_text: Functions.letMeGoogle(ctx.inlineQuery.query),
+                message_text: Functions.letMeGoogle(ctx.inlineQuery.query, true),
                 parse_mode: "Markdown",
             },
         },
