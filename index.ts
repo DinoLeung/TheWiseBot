@@ -11,15 +11,15 @@ const PORT = process.env.PORT || 443;
 
 const bot = new Telegraf(BOT_TOKEN);
 
+// So I can specfy a port
+bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT);
+
 // Set the bot name
 bot.telegram.getMe().then((botInfo: any) => {
     // tslint:disable-next-line:no-console
     console.log(botInfo.username + " is running on port " + PORT);
     bot.options.username = botInfo.username;
   });
-
-// So I can specfy a port
-bot.startWebhook("/bot${BOT_TOKEN}", null, PORT);
 
 bot.start((ctx: ContextMessageUpdate) => {
     const msg = "Greetings! I am the Wise, I can help with all your decisions. 🧙"
