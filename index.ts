@@ -1,8 +1,10 @@
 "use strict";
-import * as Telegraf from "telegraf";
+// import * as Telegraf from "telegraf";
+// tslint:disable-next-line:no-var-requires
+const Telegraf = require("telegraf");
+import { ContextMessageUpdate, Telegram } from "telegraf";
+import { InlineQueryResult} from "telegraf/typings/telegram-types";
 import * as Functions from "./functions";
-import { ContextMessageUpdate, Telegram } from "./typings/telegraf";
-import { InlineQueryResult} from "./typings/telegraf/telegram-types";
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const PROVIDER_TOKEN = process.env.PROVIDER_TOKEN;
@@ -12,12 +14,15 @@ const PORT = process.env.PORT || 443;
 const bot = new Telegraf(BOT_TOKEN);
 
 // So I can specfy a port
-bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT);
+// bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT);
+
+// start poll uptdates
+bot.startPolling();
 
 // Set the bot name
 bot.telegram.getMe().then((botInfo: any) => {
     // tslint:disable-next-line:no-console
-    console.log(botInfo.username + " is running on port " + PORT);
+    console.log(botInfo.username + " is running...");
     bot.options.username = botInfo.username;
   });
 
@@ -237,6 +242,3 @@ bot.catch((err) => {
     console.log(err);
     bot.telegram.sendMessage(MYID, "Error caught: " + err);
 });
-
-// start poll uptdates
-bot.startPolling();
